@@ -4,3 +4,6 @@
 # Ignore build outputs
 bin/
 obj/
+
+# Ignore Migrations folders
+Migrations/

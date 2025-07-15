@@ -72,7 +72,7 @@ public class UserStoryService : IUserStoryService
             Risk = userStoryDTO.Risk,
         };
 
-        var newCollab = _userStoryFactory.Create(userStoryVisitor);
-        await _userStoryRepository.AddAsync(newCollab);
+        var newUserStory = _userStoryFactory.Create(userStoryVisitor);
+        await _userStoryRepository.AddAsync(newUserStory);
     }
 }

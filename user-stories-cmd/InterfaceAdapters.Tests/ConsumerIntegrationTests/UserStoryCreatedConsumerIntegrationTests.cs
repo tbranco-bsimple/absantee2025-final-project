@@ -17,9 +17,9 @@ public class UserStoryCreatedConsumerIntegrationTests
     {
         var services = new ServiceCollection();
 
-        var collaboratorServiceMock = new Mock<IUserStoryService>();
+        var userService = new Mock<IUserStoryService>();
 
-        services.AddSingleton(collaboratorServiceMock.Object);
+        services.AddSingleton(userService.Object);
 
         services.AddMassTransitTestHarness(cfg =>
         {
@@ -50,7 +50,7 @@ public class UserStoryCreatedConsumerIntegrationTests
             var consumerHarness = provider.GetRequiredService<IConsumerTestHarness<UserStoryCreatedConsumer>>();
             Assert.True(await consumerHarness.Consumed.Any<UserStoryCreatedMessage>());
 
-            collaboratorServiceMock.Verify(x =>
+            userService.Verify(x =>
                 x.AddConsumed(userStoryFromMessageDTO), Times.Once);
         }
         finally

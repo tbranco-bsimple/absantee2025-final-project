@@ -4,7 +4,7 @@ using Moq;
 
 namespace InterfaceAdapters.Tests.ConsumersTests;
 
-public class UserCreatedConsumerConstructorTests
+public class UserStoryCreatedConsumerConstructorTests
 {
     [Fact]
     public void Constructor_ShouldInstantiate_WithCorrectData()

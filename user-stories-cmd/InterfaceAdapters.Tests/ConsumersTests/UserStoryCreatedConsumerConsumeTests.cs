@@ -8,7 +8,7 @@ using Moq;
 
 namespace InterfaceAdapters.Tests.ConsumersTests;
 
-public class UserCreatedConsumerConsumeTests
+public class UserStoryCreatedConsumerConsumeTests
 {
     [Fact]
     public async Task Consume_ShouldCallAddConsumed_WithCorrectData()

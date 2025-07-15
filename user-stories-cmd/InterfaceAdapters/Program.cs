@@ -24,7 +24,6 @@ builder.Services.AddDbContext<UserStoriesContext>(options =>
 //Services
 builder.Services.AddTransient<IUserStoryService, UserStoryService>();
 
-builder.Services.AddSingleton<IUserStoryService, UserStoryService>();
 
 //Repositories
 builder.Services.AddTransient<IUserStoryRepository, UserStoryRepository>();

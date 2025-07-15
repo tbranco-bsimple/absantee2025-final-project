@@ -4,5 +4,6 @@ namespace Domain.IRepository;
 
 public interface IUserStoryRepository
 {
-    Task<IUserStory> AddAsync(IUserStory us);
+    Task<IUserStory> AddAsync(IUserStory userStory);
+    Task<IUserStory?> GetByIdAsync(Guid id);
 }

@@ -1,6 +1,6 @@
 using Application.DTOs;
 using Application.Interfaces;
-/* using Application.IPublishers; */
+using Application.IPublishers;
 using Application.Services;
 using Domain.Factory;
 using Domain.IRepository;
@@ -8,6 +8,9 @@ using Domain.Models;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Infrastructure.Resolvers;
+using InterfaceAdapters;
+using InterfaceAdapters.Consumers;
+using InterfaceAdapters.Publishers;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +24,7 @@ builder.Services.AddDbContext<UserStoriesContext>(options =>
 //Services
 builder.Services.AddTransient<IUserStoryService, UserStoryService>();
 
+builder.Services.AddSingleton<IUserStoryService, UserStoryService>();
 
 //Repositories
 builder.Services.AddTransient<IUserStoryRepository, UserStoryRepository>();
@@ -42,7 +46,7 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 // MassTransit
-/* builder.Services.AddTransient<IMessagePublisher, MassTransitPublisher>();
+builder.Services.AddTransient<IMessagePublisher, MassTransitPublisher>();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -62,13 +66,9 @@ builder.Services.AddMassTransit(x =>
             e.ConfigureConsumer<UserStoryCreatedConsumer>(context);
         });
     });
-}); */
+});
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    });
+builder.Services.AddControllers();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

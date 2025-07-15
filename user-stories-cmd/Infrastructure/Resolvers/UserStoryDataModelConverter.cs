@@ -1,11 +1,10 @@
 using AutoMapper;
-using Domain.Factory;
-using Domain.Models;
+using Domain.Interfaces;
 using Infrastructure.DataModel;
 
 namespace Infrastructure.Resolvers;
 
-public class UserStoryDataModelConverter : ITypeConverter<UserStoryDataModel, UserStory>
+public class UserStoryDataModelConverter : ITypeConverter<UserStoryDataModel, IUserStory>
 {
     private readonly IUserStoryFactory _factory;
 
@@ -14,7 +13,7 @@ public class UserStoryDataModelConverter : ITypeConverter<UserStoryDataModel, Us
         _factory = factory;
     }
 
-    public UserStory Convert(UserStoryDataModel source, UserStory destination, ResolutionContext context)
+    public IUserStory Convert(UserStoryDataModel source, IUserStory destination, ResolutionContext context)
     {
         return _factory.Create(source);
     }

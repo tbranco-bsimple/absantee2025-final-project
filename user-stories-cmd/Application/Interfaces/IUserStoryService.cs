@@ -4,5 +4,6 @@ namespace Application.Interfaces;
 
 public interface IUserStoryService
 {
-    Task<Result<CreatedUserStoryDTO>> Create(CreateUserStoryDTO usDTO);
+    Task<Result<CreatedUserStoryDTO>> Create(CreateUserStoryDTO userStoryDTO);
+    Task AddConsumed(CreateUserStoryFromMessageDTO userStoryDTO);
 }

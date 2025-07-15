@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Application.DTOs;
+﻿using Application.DTOs;
+using Application.IPublishers;
 using Application.Services;
 using Domain.Interfaces;
 using Domain.IRepository;
@@ -16,6 +16,7 @@ public class UserStoryServiceCreateTests
         //Arrange
         var userStoryRepository = new Mock<IUserStoryRepository>();
         var userStoryFactory = new Mock<IUserStoryFactory>();
+        var publisher = new Mock<IMessagePublisher>();
 
         var id = Guid.NewGuid();
         var description = "description";
@@ -27,7 +28,7 @@ public class UserStoryServiceCreateTests
         userStoryFactory.Setup(x => x.Create(description, priority, risk)).Returns(userStory);
         userStoryRepository.Setup(x => x.AddAsync(It.IsAny<IUserStory>())).ReturnsAsync(userStory);
 
-        var service = new UserStoryService(userStoryRepository.Object, userStoryFactory.Object);
+        var service = new UserStoryService(userStoryRepository.Object, userStoryFactory.Object, publisher.Object);
 
         var createDto = new CreateUserStoryDTO
         {
@@ -47,6 +48,8 @@ public class UserStoryServiceCreateTests
         Assert.Equal(description, result.Value.Description);
         Assert.Equal(priority, result.Value.Priority);
         Assert.Equal(risk, result.Value.Risk);
+
+        publisher.Verify(p => p.PublishUserStoryCreatedAsync(userStory), Times.Once);
     }
 
     [Fact]
@@ -55,6 +58,7 @@ public class UserStoryServiceCreateTests
         // Arrange
         var userStoryRepository = new Mock<IUserStoryRepository>();
         var userStoryFactory = new Mock<IUserStoryFactory>();
+        var publisher = new Mock<IMessagePublisher>();
 
         var createDto = new CreateUserStoryDTO
         {
@@ -69,7 +73,7 @@ public class UserStoryServiceCreateTests
             .Setup(f => f.Create(createDto.Description, createDto.Priority, createDto.Risk))
             .Throws(expectedException);
 
-        var service = new UserStoryService(userStoryRepository.Object, userStoryFactory.Object);
+        var service = new UserStoryService(userStoryRepository.Object, userStoryFactory.Object, publisher.Object);
 
         // Act
         var result = await service.Create(createDto);
@@ -80,5 +84,7 @@ public class UserStoryServiceCreateTests
         Assert.Equal(expectedException.Message, result.Error.Message);
 
         userStoryRepository.Verify(r => r.AddAsync(It.IsAny<IUserStory>()), Times.Never);
+        publisher.Verify(p => p.PublishUserStoryCreatedAsync(It.IsAny<IUserStory>()), Times.Never);
+
     }
 }

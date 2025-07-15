@@ -16,9 +16,9 @@ public class UserStoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreatedUserStoryDTO>> Create([FromBody] CreateUserStoryDTO usDTO)
+    public async Task<ActionResult<CreatedUserStoryDTO>> Create([FromBody] CreateUserStoryDTO userStoryDTO)
     {
-        var usCreatedDTO = await _userStoryService.Create(usDTO);
+        var usCreatedDTO = await _userStoryService.Create(userStoryDTO);
 
         return usCreatedDTO.ToActionResult();
     }

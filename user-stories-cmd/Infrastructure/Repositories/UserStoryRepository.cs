@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Domain.IRepository;
 using Domain.Models;
 using Infrastructure.DataModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -17,13 +18,24 @@ public class UserStoryRepository : IUserStoryRepository
         _mapper = mapper;
     }
 
-    public async Task<IUserStory> AddAsync(IUserStory us)
+    public async Task<IUserStory> AddAsync(IUserStory userStory)
     {
-        var usDataModel = _mapper.Map<UserStory, UserStoryDataModel>((UserStory)us);
+        var userStoryDataModel = _mapper.Map<UserStory, UserStoryDataModel>((UserStory)userStory);
 
-        _context.Set<UserStoryDataModel>().Add(usDataModel);
+        await _context.Set<UserStoryDataModel>().AddAsync(userStoryDataModel);
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<UserStoryDataModel, UserStory>(usDataModel);
+        return _mapper.Map<UserStoryDataModel, UserStory>(userStoryDataModel);
+    }
+
+    public async Task<IUserStory?> GetByIdAsync(Guid id)
+    {
+        var userStoryDataModel = await _context.Set<UserStoryDataModel>()
+            .FirstOrDefaultAsync(us => us.Id == id);
+
+        if (userStoryDataModel == null)
+            return null;
+
+        return _mapper.Map<UserStoryDataModel, UserStory>(userStoryDataModel);
     }
 }

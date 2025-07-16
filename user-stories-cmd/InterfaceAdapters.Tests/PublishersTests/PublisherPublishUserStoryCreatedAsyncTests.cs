@@ -37,8 +37,8 @@ public class PublisherPublishUserStoryCreatedAsyncTests
                 It.Is<UserStoryCreatedMessage>(e =>
                     e.Id == id &&
                     e.Description == description &&
-                    e.Priority == priority &&
-                    e.Risk == risk
+                    e.Priority == (int)priority &&
+                    e.Risk == (int)risk
                 ),
                 It.IsAny<CancellationToken>()
             ),

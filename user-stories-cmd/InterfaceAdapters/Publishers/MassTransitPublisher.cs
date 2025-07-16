@@ -19,8 +19,8 @@ public class MassTransitPublisher : IMessagePublisher
         var eventMessage = new UserStoryCreatedMessage(
             userStory.Id,
             userStory.Description,
-            userStory.Priority,
-            userStory.Risk
+            (int)userStory.Priority,
+            (int)userStory.Risk
         );
 
         await _publishEndpoint.Publish(eventMessage);

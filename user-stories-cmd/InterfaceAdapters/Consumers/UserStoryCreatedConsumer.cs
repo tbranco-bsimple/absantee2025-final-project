@@ -2,6 +2,7 @@ using Application.Interfaces;
 using MassTransit;
 using Domain.Messages;
 using Application.DTOs;
+using Domain.Models;
 
 namespace InterfaceAdapters.Consumers;
 
@@ -21,8 +22,8 @@ public class UserStoryCreatedConsumer : IConsumer<UserStoryCreatedMessage>
         var userStoryDTO = new CreateUserStoryFromMessageDTO(
             context.Message.Id,
             context.Message.Description,
-            context.Message.Priority,
-            context.Message.Risk
+            (Priority)context.Message.Priority,
+            (Risk)context.Message.Risk
         );
         await _userStoryService.AddConsumed(userStoryDTO);
     }

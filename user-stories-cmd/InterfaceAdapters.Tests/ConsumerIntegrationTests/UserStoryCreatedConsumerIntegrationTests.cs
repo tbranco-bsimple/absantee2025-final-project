@@ -36,11 +36,11 @@ public class UserStoryCreatedConsumerIntegrationTests
             var message = new UserStoryCreatedMessage(
                 Guid.NewGuid(),
                 "description",
-                Priority.High,
-                Risk.Critical
+                (int)Priority.High,
+                (int)Risk.Critical
             );
 
-            var userStoryFromMessageDTO = new CreateUserStoryFromMessageDTO(message.Id, message.Description, message.Priority, message.Risk);
+            var userStoryFromMessageDTO = new CreateUserStoryFromMessageDTO(message.Id, message.Description, (Priority)message.Priority, (Risk)message.Risk);
 
 
             await harness.Bus.Publish(message);

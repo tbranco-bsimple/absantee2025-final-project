@@ -7,17 +7,16 @@ public class PeriodDate
 
     public PeriodDate(DateOnly initDate, DateOnly finalDate)
     {
-        if (InitDate > FinalDate)
-            throw new ArgumentException("Invalid Arguments");
+        if (initDate > finalDate)
+            throw new ArgumentException("Invalid dates.");
 
         InitDate = initDate;
         FinalDate = finalDate;
     }
 
-    public bool Contains(PeriodDate periodDate)
+    public bool IsWithin(PeriodDate container)
     {
-        return InitDate <= periodDate.InitDate
-        && FinalDate >= periodDate.FinalDate;
+        return container.InitDate <= InitDate && container.FinalDate >= FinalDate;
     }
 }
 

@@ -21,7 +21,7 @@ public class SprintFactory : ISprintFactory
         if (project == null)
             throw new ArgumentException("The project doesn't exist.");
 
-        if (!project.Period.Contains(period))
+        if (!period.IsWithin(project.Period))
             throw new ArgumentException("The sprint's period is outside of project's period.");
 
         return new Sprint(projectId, period, totalEffortHours);

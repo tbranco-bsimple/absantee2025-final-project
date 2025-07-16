@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InterfaceAdapters.Controllers;
 
-[Route("api/user-stories")]
+[Route("api/userstories")]
 [ApiController]
 public class UserStoryController : ControllerBase
 {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InterfaceAdapters.Controllers;
 
-[Route("api/associations-sprint-user-story")]
+[Route("api/associations-sprint-userstory")]
 [ApiController]
 public class AssociationSprintUserStoryController : ControllerBase
 {
@@ -21,5 +21,13 @@ public class AssociationSprintUserStoryController : ControllerBase
         var associationSprintUserStoryCreatedDTO = await _associationSprintUserStoryService.Create(associationSprintUserStoryDTO);
 
         return associationSprintUserStoryCreatedDTO.ToActionResult();
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<ActionResult<UpdatedAssociationSprintUserStoryDTO>> EditEffortCompletion(Guid id, [FromBody] UpdateEffortAndCompletionDTO updateEffortAndCompletionDTO)
+    {
+        var associationSprintUserStoryUpdatedDTO = await _associationSprintUserStoryService.UpdateEffortCompletion(id, updateEffortAndCompletionDTO);
+
+        return associationSprintUserStoryUpdatedDTO.ToActionResult();
     }
 }

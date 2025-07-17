@@ -5,6 +5,7 @@ namespace Domain.IRepository;
 public interface IAssociationSprintUserStoryRepository
 {
     Task<IAssociationSprintUserStory> AddAsync(IAssociationSprintUserStory associationSprintUserStory);
+    Task<IAssociationSprintUserStory?> UpdateAsync(IAssociationSprintUserStory associationSprintUserStory);
     Task<IAssociationSprintUserStory?> GetByIdAsync(Guid id);
     Task<IAssociationSprintUserStory?> GetBySprintUserStoryAsync(Guid sprintId, Guid userStoryId);
 }

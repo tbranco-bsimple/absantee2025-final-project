@@ -64,4 +64,43 @@ public class AssociationSprintUserStoryService : IAssociationSprintUserStoryServ
         var newAssociationSprintUserStory = _associationSprintUserStoryFactory.Create(associationSprintUserStoryVisitor);
         await _associationSprintUserStoryRepository.AddAsync(newAssociationSprintUserStory);
     }
+
+    public async Task<Result<UpdatedAssociationSprintUserStoryDTO>> UpdateEffortCompletion(Guid id, UpdateEffortAndCompletionDTO updateEffortAndCompletionDTO)
+    {
+
+        try
+        {
+            var associationSprintUserStory = await _associationSprintUserStoryRepository.GetByIdAsync(id);
+            if (associationSprintUserStory == null)
+                return Result<UpdatedAssociationSprintUserStoryDTO>.Failure(Error.NotFound($"Association with ID {id} not found."));
+
+            associationSprintUserStory.UpdateEffortAndCompletion(updateEffortAndCompletionDTO.EffortHours, updateEffortAndCompletionDTO.CompletionPercentage);
+            associationSprintUserStory = await _associationSprintUserStoryRepository.UpdateAsync(associationSprintUserStory);
+
+            var result = new UpdatedAssociationSprintUserStoryDTO(associationSprintUserStory.Id, associationSprintUserStory.SprintId, associationSprintUserStory.UserStoryId, associationSprintUserStory.CollaboratorId, associationSprintUserStory.EffortHours, associationSprintUserStory.CompletionPercentage);
+
+            await _publisher.PublishAssociationSprintUserStoryUpdatedAsync(associationSprintUserStory);
+
+            return Result<UpdatedAssociationSprintUserStoryDTO>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<UpdatedAssociationSprintUserStoryDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
+    public async Task UpdateConsumed(UpdateAssociationSprintUserStoryFromMessageDTO associationSprintUserStoryDTO)
+    {
+        var existingAssociation = await _associationSprintUserStoryRepository.GetByIdAsync(associationSprintUserStoryDTO.Id);
+
+        if (existingAssociation == null)
+        {
+            Console.WriteLine($"AssociationSprintUserStoryConsumed not updated, does not exist with Id: {associationSprintUserStoryDTO.Id}");
+            return;
+        }
+
+        existingAssociation.UpdateEffortAndCompletion(associationSprintUserStoryDTO.EffortHours, associationSprintUserStoryDTO.CompletionPercentage);
+        await _associationSprintUserStoryRepository.UpdateAsync(existingAssociation);
+    }
+
 }

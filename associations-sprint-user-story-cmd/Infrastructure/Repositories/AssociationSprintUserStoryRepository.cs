@@ -28,6 +28,23 @@ public class AssociationSprintUserStoryRepository : IAssociationSprintUserStoryR
         return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
     }
 
+    public async Task<IAssociationSprintUserStory?> UpdateAsync(IAssociationSprintUserStory associationSprintUserStory)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .FirstOrDefaultAsync(a => a.Id == associationSprintUserStory.Id);
+
+        if (associationSprintUserStoryDataModel == null)
+            return null;
+
+        associationSprintUserStoryDataModel.EffortHours = associationSprintUserStory.EffortHours;
+        associationSprintUserStoryDataModel.CompletionPercentage = associationSprintUserStory.CompletionPercentage;
+
+        _context.Set<AssociationSprintUserStoryDataModel>().Update(associationSprintUserStoryDataModel);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+
     public async Task<IAssociationSprintUserStory?> GetByIdAsync(Guid id)
     {
         var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()

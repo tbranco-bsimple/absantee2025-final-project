@@ -1,4 +1,3 @@
-using Application.DTOs;
 using Application.IPublishers;
 using Domain.Interfaces;
 using Domain.Messages;
@@ -22,6 +21,17 @@ public class MassTransitPublisher : IMessagePublisher
             associationSprintUserStoryDTO.SprintId,
             associationSprintUserStoryDTO.UserStoryId,
             associationSprintUserStoryDTO.CollaboratorId,
+            associationSprintUserStoryDTO.EffortHours,
+            associationSprintUserStoryDTO.CompletionPercentage
+        );
+
+        await _publishEndpoint.Publish(eventMessage);
+    }
+
+    public async Task PublishAssociationSprintUserStoryUpdatedAsync(IAssociationSprintUserStory associationSprintUserStoryDTO)
+    {
+        var eventMessage = new AssociationSprintUserStoryUpdatedMessage(
+            associationSprintUserStoryDTO.Id,
             associationSprintUserStoryDTO.EffortHours,
             associationSprintUserStoryDTO.CompletionPercentage
         );

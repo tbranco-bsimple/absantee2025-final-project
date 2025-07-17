@@ -8,4 +8,7 @@ public interface IAssociationSprintUserStory
     public Guid CollaboratorId { get; }
     public int EffortHours { get; }
     public int CompletionPercentage { get; }
+    public void ValidateCompletionPercentage(int completionPercentage);
+    public void ValidateEffortHours(int effortHours);
+    public void UpdateEffortAndCompletion(int effortHours, int completionPercentage);
 }

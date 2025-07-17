@@ -5,7 +5,8 @@ namespace Application.IPublishers;
 
 public interface IMessagePublisher
 {
-    Task PublishAssociationSprintUserStoryCreatedAsync(IAssociationSprintUserStory associationSprintUserStoryDTO);
+    Task PublishAssociationSprintUserStoryCreatedAsync(IAssociationSprintUserStory associationSprintUserStory);
+    Task PublishAssociationSprintUserStoryUpdatedAsync(IAssociationSprintUserStory associationSprintUserStory);
     Task SendStartSagaCreateSprintMessageAsync(/* StartSagaCreateSagaDTO */ ISprint sprintDTO);
     Task SendCreateSprintCommandAsync(ISprint sprint);
 }

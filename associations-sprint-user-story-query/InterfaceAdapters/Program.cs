@@ -58,6 +58,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<AssociationSprintUserStoryCreatedConsumer>();
+    x.AddConsumer<AssociationSprintUserStoryUpdatedConsumer>();
     x.AddConsumer<SprintCreatedConsumer>();
     x.AddConsumer<UserStoryCreatedConsumer>();
     x.AddConsumer<CollaboratorCreatedConsumer>();
@@ -74,6 +75,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint($"associations-sprint-user-story-query-{instance}", e =>
         {
             e.ConfigureConsumer<AssociationSprintUserStoryCreatedConsumer>(context);
+            e.ConfigureConsumer<AssociationSprintUserStoryUpdatedConsumer>(context);
             e.ConfigureConsumer<SprintCreatedConsumer>(context);
             e.ConfigureConsumer<UserStoryCreatedConsumer>(context);
             e.ConfigureConsumer<CollaboratorCreatedConsumer>(context);

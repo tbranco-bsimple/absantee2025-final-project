@@ -28,21 +28,29 @@ public class AssociationSprintUserStoryRepository : IAssociationSprintUserStoryR
         return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
     }
 
+    public async Task<IAssociationSprintUserStory?> UpdateAsync(IAssociationSprintUserStory associationSprintUserStory)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .FirstOrDefaultAsync(a => a.Id == associationSprintUserStory.Id);
+
+        if (associationSprintUserStoryDataModel == null)
+            return null;
+
+        associationSprintUserStoryDataModel.EffortHours = associationSprintUserStory.EffortHours;
+        associationSprintUserStoryDataModel.CompletionPercentage = associationSprintUserStory.CompletionPercentage;
+
+        _context.Set<AssociationSprintUserStoryDataModel>().Update(associationSprintUserStoryDataModel);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+
     public async Task<IEnumerable<IAssociationSprintUserStory>> GetAllAsync()
     {
         var sprintDataModels = await _context.Set<AssociationSprintUserStoryDataModel>().ToListAsync();
         var result = sprintDataModels.Select(_mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>);
 
         return result;
-    }
-
-    public async Task<IEnumerable<IAssociationSprintUserStory>> GetAllBySprintIdAsync(Guid sprintId)
-    {
-        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
-            .Where(a => a.SprintId == sprintId)
-            .ToListAsync();
-
-        return _mapper.Map<List<IAssociationSprintUserStory>>(associationSprintUserStoryDataModel);
     }
 
     public async Task<IAssociationSprintUserStory?> GetByIdAsync(Guid id)
@@ -54,6 +62,15 @@ public class AssociationSprintUserStoryRepository : IAssociationSprintUserStoryR
             return null;
 
         return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+
+    public async Task<IEnumerable<IAssociationSprintUserStory>> GetAllBySprintIdAsync(Guid sprintId)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .Where(a => a.SprintId == sprintId)
+            .ToListAsync();
+
+        return _mapper.Map<List<IAssociationSprintUserStory>>(associationSprintUserStoryDataModel);
     }
 
     public async Task<IAssociationSprintUserStory?> GetBySprintUserStoryAsync(Guid sprintId, Guid userStoryId)

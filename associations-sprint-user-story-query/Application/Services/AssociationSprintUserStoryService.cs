@@ -85,4 +85,18 @@ public class AssociationSprintUserStoryService : IAssociationSprintUserStoryServ
         var newAssociationSprintUserStory = _associationSprintUserStoryFactory.Create(associationSprintUserStoryVisitor);
         await _associationSprintUserStoryRepository.AddAsync(newAssociationSprintUserStory);
     }
+
+    public async Task UpdateConsumed(UpdateAssociationSprintUserStoryFromMessageDTO associationSprintUserStoryDTO)
+    {
+        var existingAssociation = await _associationSprintUserStoryRepository.GetByIdAsync(associationSprintUserStoryDTO.Id);
+
+        if (existingAssociation == null)
+        {
+            Console.WriteLine($"AssociationSprintUserStoryConsumed not updated, does not exist with Id: {associationSprintUserStoryDTO.Id}");
+            return;
+        }
+
+        existingAssociation.UpdateEffortAndCompletion(associationSprintUserStoryDTO.EffortHours, associationSprintUserStoryDTO.CompletionPercentage);
+        await _associationSprintUserStoryRepository.UpdateAsync(existingAssociation);
+    }
 }

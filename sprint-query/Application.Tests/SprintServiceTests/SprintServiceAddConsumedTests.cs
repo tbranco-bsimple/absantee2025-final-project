@@ -18,7 +18,6 @@ public class SprintServiceAddConsumedTests
         // Arrange
         var sprintRepository = new Mock<ISprintRepository>();
         var sprintFactory = new Mock<ISprintFactory>();
-        var publisher = new Mock<IMessagePublisher>();
 
         var id = Guid.NewGuid();
         var projectId = Guid.NewGuid();
@@ -34,7 +33,7 @@ public class SprintServiceAddConsumedTests
         sprintFactory.Setup(f => f.Create(It.IsAny<SprintDataModel>()))
                .Returns(expectedSprint.Object);
 
-        var service = new SprintService(sprintRepository.Object, sprintFactory.Object, publisher.Object);
+        var service = new SprintService(sprintRepository.Object, sprintFactory.Object);
 
         // Act
         await service.AddConsumed(createSprintDTO);
@@ -51,7 +50,6 @@ public class SprintServiceAddConsumedTests
         // Arrange
         var sprintRepository = new Mock<ISprintRepository>();
         var sprintFactory = new Mock<ISprintFactory>();
-        var publisher = new Mock<IMessagePublisher>();
 
         var id = Guid.NewGuid();
         var projectId = Guid.NewGuid();
@@ -64,7 +62,7 @@ public class SprintServiceAddConsumedTests
         sprintRepository.Setup(r => r.GetByIdAsync(createSprintDTO.Id))
                 .ReturnsAsync(sprint.Object);
 
-        var service = new SprintService(sprintRepository.Object, sprintFactory.Object, publisher.Object);
+        var service = new SprintService(sprintRepository.Object, sprintFactory.Object);
 
         // Act
         await service.AddConsumed(createSprintDTO);

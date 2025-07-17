@@ -13,13 +13,11 @@ public class SprintService : ISprintService
 {
     private ISprintRepository _sprintRepository;
     private ISprintFactory _sprintFactory;
-    private readonly IMessagePublisher _publisher;
 
-    public SprintService(ISprintRepository sprintRepository, ISprintFactory sprintFactory, IMessagePublisher publisher)
+    public SprintService(ISprintRepository sprintRepository, ISprintFactory sprintFactory)
     {
         _sprintRepository = sprintRepository;
         _sprintFactory = sprintFactory;
-        _publisher = publisher;
     }
 
     public async Task<Result<IEnumerable<SprintDTO>>> GetAll()
@@ -27,6 +25,21 @@ public class SprintService : ISprintService
         try
         {
             var sprints = await _sprintRepository.GetAllAsync();
+            var result = sprints.Select(s => new SprintDTO(s.Id, s.ProjectId, s.Period, s.TotalEffortHours));
+
+            return Result<IEnumerable<SprintDTO>>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<IEnumerable<SprintDTO>>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
+    public async Task<Result<IEnumerable<SprintDTO>>> GetAllByProjectId(Guid projectId)
+    {
+        try
+        {
+            var sprints = await _sprintRepository.GetAllByProjectIdAsync(projectId);
             var result = sprints.Select(s => new SprintDTO(s.Id, s.ProjectId, s.Period, s.TotalEffortHours));
 
             return Result<IEnumerable<SprintDTO>>.Success(result);

@@ -36,6 +36,16 @@ public class SprintRepository : ISprintRepository
         return result;
     }
 
+    public async Task<IEnumerable<ISprint>> GetAllByProjectIdAsync(Guid projectId)
+    {
+        var sprintDataModels = await _context.Set<SprintDataModel>().ToListAsync();
+        var result = sprintDataModels
+            .Where(s => s.ProjectId == projectId)
+            .Select(_mapper.Map<SprintDataModel, Sprint>);
+
+        return result;
+    }
+
     public async Task<ISprint?> GetByIdAsync(Guid id)
     {
         var sprintDataModel = await _context.Set<SprintDataModel>()

@@ -36,10 +36,31 @@ public class AssociationSprintUserStoryRepository : IAssociationSprintUserStoryR
         return result;
     }
 
+    public async Task<IEnumerable<IAssociationSprintUserStory>> GetAllBySprintIdAsync(Guid sprintId)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .Where(a => a.SprintId == sprintId)
+            .ToListAsync();
+
+        return _mapper.Map<List<IAssociationSprintUserStory>>(associationSprintUserStoryDataModel);
+    }
+
     public async Task<IAssociationSprintUserStory?> GetByIdAsync(Guid id)
     {
         var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
-            .FirstOrDefaultAsync(us => us.Id == id);
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        if (associationSprintUserStoryDataModel == null)
+            return null;
+
+        return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+
+    public async Task<IAssociationSprintUserStory?> GetBySprintUserStoryAsync(Guid sprintId, Guid userStoryId)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .FirstOrDefaultAsync(a => a.SprintId == sprintId &&
+                                a.UserStoryId == userStoryId);
 
         if (associationSprintUserStoryDataModel == null)
             return null;

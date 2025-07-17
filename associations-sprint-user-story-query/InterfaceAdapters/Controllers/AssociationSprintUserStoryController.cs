@@ -22,4 +22,20 @@ public class AssociationSprintUserStoryController : ControllerBase
 
         return associationsSprintUserStoryDTO.ToActionResult();
     }
+
+    [HttpGet("sprint/{sprintId}")]
+    public async Task<ActionResult<IEnumerable<UserStoryDTO>>> GetAllUserStoriesOfSprint(Guid sprintId)
+    {
+        var userStoriesDTO = await _associationSprintUserStoryService.GetAllUserStoriesOfSprint(sprintId);
+
+        return userStoriesDTO.ToActionResult();
+    }
+
+    [HttpGet("sprint/{sprintId}/userstory/{userStoryId}")]
+    public async Task<ActionResult<UserStoryDTO>> GetUserStoryOfSprint(Guid sprintId, Guid userStoryId)
+    {
+        var userStoryOfSprintDTO = await _associationSprintUserStoryService.GetUserStoryOfSprint(sprintId, userStoryId);
+
+        return userStoryOfSprintDTO.ToActionResult();
+    }
 }

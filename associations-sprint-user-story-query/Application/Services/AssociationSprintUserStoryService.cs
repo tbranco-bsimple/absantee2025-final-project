@@ -32,6 +32,36 @@ public class AssociationSprintUserStoryService : IAssociationSprintUserStoryServ
         }
     }
 
+    public async Task<Result<IEnumerable<UserStoryDTO>>> GetAllUserStoriesOfSprint(Guid sprintId)
+    {
+        try
+        {
+            var associationsSprintUserStory = await _associationSprintUserStoryRepository.GetAllBySprintIdAsync(sprintId);
+            var result = associationsSprintUserStory.Select(a => new UserStoryDTO(a.Id));
+
+            return Result<IEnumerable<UserStoryDTO>>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<IEnumerable<UserStoryDTO>>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
+    public async Task<Result<UserStoryDTO>> GetUserStoryOfSprint(Guid sprintId, Guid userStoryId)
+    {
+        try
+        {
+            var associationsSprintUserStory = await _associationSprintUserStoryRepository.GetBySprintUserStoryAsync(sprintId, userStoryId);
+            var result = new UserStoryDTO(associationsSprintUserStory.Id);
+
+            return Result<UserStoryDTO>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<UserStoryDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
     public async Task AddConsumed(CreateAssociationSprintUserStoryFromMessageDTO associationSprintUserStoryDTO)
     {
         var associationSprintUserStory = await _associationSprintUserStoryRepository.GetByIdAsync(associationSprintUserStoryDTO.Id);

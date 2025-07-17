@@ -18,8 +18,8 @@ public class SprintController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CreatedSprintDTO>> Create([FromBody] CreateSprintDTO sprintDTO)
     {
-        var usCreatedDTO = await _sprintService.Create(sprintDTO);
+        var sprintCreatedDTO = await _sprintService.Create(sprintDTO);
 
-        return usCreatedDTO.ToActionResult();
+        return sprintCreatedDTO.ToActionResult();
     }
 }

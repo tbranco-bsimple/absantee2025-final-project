@@ -1,0 +1,41 @@
+using AutoMapper;
+using Domain.Interfaces;
+using Domain.IRepository;
+using Domain.Models;
+using Infrastructure.DataModel;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Repositories;
+
+public class AssociationSprintUserStoryRepository : IAssociationSprintUserStoryRepository
+{
+    protected readonly AssociationsSprintUserStoryContext _context;
+    private readonly IMapper _mapper;
+
+    public AssociationSprintUserStoryRepository(AssociationsSprintUserStoryContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
+
+    public async Task<IAssociationSprintUserStory> AddAsync(IAssociationSprintUserStory associationSprintUserStory)
+    {
+        var associationSprintUserStoryDataModel = _mapper.Map<AssociationSprintUserStory, AssociationSprintUserStoryDataModel>((AssociationSprintUserStory)associationSprintUserStory);
+
+        await _context.Set<AssociationSprintUserStoryDataModel>().AddAsync(associationSprintUserStoryDataModel);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+
+    public async Task<IAssociationSprintUserStory?> GetByIdAsync(Guid id)
+    {
+        var associationSprintUserStoryDataModel = await _context.Set<AssociationSprintUserStoryDataModel>()
+            .FirstOrDefaultAsync(us => us.Id == id);
+
+        if (associationSprintUserStoryDataModel == null)
+            return null;
+
+        return _mapper.Map<AssociationSprintUserStoryDataModel, AssociationSprintUserStory>(associationSprintUserStoryDataModel);
+    }
+}

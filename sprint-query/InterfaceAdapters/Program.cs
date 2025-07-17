@@ -1,6 +1,5 @@
 using Application.DTOs;
 using Application.Interfaces;
-using Application.IPublishers;
 using Application.Services;
 using Domain.Factory;
 using Domain.IRepository;
@@ -10,7 +9,6 @@ using Infrastructure.Repositories;
 using Infrastructure.Resolvers;
 using InterfaceAdapters;
 using InterfaceAdapters.Consumers;
-using InterfaceAdapters.Publishers;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,8 +47,6 @@ builder.Services.AddAutoMapper(cfg =>
 });
 
 // MassTransit
-builder.Services.AddTransient<IMessagePublisher, MassTransitPublisher>();
-
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<SprintCreatedConsumer>();

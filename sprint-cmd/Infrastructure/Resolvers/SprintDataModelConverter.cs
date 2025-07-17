@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Factory;
 using Domain.Interfaces;
 using Infrastructure.DataModel;
 

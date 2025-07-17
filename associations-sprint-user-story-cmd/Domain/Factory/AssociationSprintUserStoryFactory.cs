@@ -7,12 +7,14 @@ namespace Domain.Factory;
 
 public class AssociationSprintUserStoryFactory : IAssociationSprintUserStoryFactory
 {
+    private readonly IAssociationSprintUserStoryRepository _associationSprintUserStoryRepository;
     private readonly ISprintRepository _sprintRepository;
     private readonly IUserStoryRepository _userStoryRepository;
     private readonly ICollaboratorRepository _collaboratorRepository;
 
-    public AssociationSprintUserStoryFactory(ISprintRepository sprintRepository, IUserStoryRepository userStoryRepository, ICollaboratorRepository collaboratorRepository)
+    public AssociationSprintUserStoryFactory(IAssociationSprintUserStoryRepository associationSprintUserStoryRepository, ISprintRepository sprintRepository, IUserStoryRepository userStoryRepository, ICollaboratorRepository collaboratorRepository)
     {
+        _associationSprintUserStoryRepository = associationSprintUserStoryRepository;
         _sprintRepository = sprintRepository;
         _userStoryRepository = userStoryRepository;
         _collaboratorRepository = collaboratorRepository;
@@ -31,6 +33,10 @@ public class AssociationSprintUserStoryFactory : IAssociationSprintUserStoryFact
         var collaborator = await _collaboratorRepository.GetByIdAsync(collaboratorId);
         if (collaborator == null)
             throw new ArgumentException("The collaborator doesn't exist.");
+
+        var association = await _associationSprintUserStoryRepository.GetBySprintUserStoryAsync(sprintId, userStoryId);
+        if (association != null)
+            throw new ArgumentException("A collaborator already has an association for this user story on this sprint.");
 
         if (!sprint.Period.IsWithin(collaborator.Period))
             throw new ArgumentException("The sprint's period is outside of project's period.");

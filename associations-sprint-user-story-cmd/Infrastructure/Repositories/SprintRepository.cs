@@ -31,7 +31,7 @@ public class SprintRepository : ISprintRepository
     public async Task<ISprint?> GetByIdAsync(Guid id)
     {
         var sprintDataModel = await _context.Set<SprintDataModel>()
-            .FirstOrDefaultAsync(us => us.Id == id);
+            .FirstOrDefaultAsync(s => s.Id == id);
 
         if (sprintDataModel == null)
             return null;

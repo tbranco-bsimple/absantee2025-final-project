@@ -18,10 +18,11 @@ public class CollaboratorCreatedConsumer : IConsumer<CollaboratorCreatedMessage>
     {
         Console.WriteLine("[DEBUG] CollaboratorCreatedConsumer");
 
-        var CollaboratorDTO = new CreateCollaboratorFromMessageDTO(
+        var collaboratorDTO = new CreateCollaboratorFromMessageDTO(
             context.Message.Id,
             context.Message.PeriodDateTime
         );
-        await _CollaboratorService.AddConsumed(CollaboratorDTO);
+
+        await _CollaboratorService.AddConsumed(collaboratorDTO);
     }
 }

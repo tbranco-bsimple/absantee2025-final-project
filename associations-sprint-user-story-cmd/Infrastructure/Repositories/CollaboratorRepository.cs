@@ -31,7 +31,7 @@ public class CollaboratorRepository : ICollaboratorRepository
     public async Task<ICollaborator?> GetByIdAsync(Guid id)
     {
         var collaboratorDataModel = await _context.Set<CollaboratorDataModel>()
-            .FirstOrDefaultAsync(us => us.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (collaboratorDataModel == null)
             return null;

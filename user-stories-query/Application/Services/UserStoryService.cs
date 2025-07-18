@@ -1,3 +1,4 @@
+using System.Data.Common;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.IPublishers;
@@ -11,32 +12,11 @@ public class UserStoryService : IUserStoryService
 {
     private IUserStoryRepository _userStoryRepository;
     private IUserStoryFactory _userStoryFactory;
-    private readonly IMessagePublisher _publisher;
 
-    public UserStoryService(IUserStoryRepository userStoryRepository, IUserStoryFactory userStoryFactory, IMessagePublisher publisher)
+    public UserStoryService(IUserStoryRepository userStoryRepository, IUserStoryFactory userStoryFactory)
     {
         _userStoryRepository = userStoryRepository;
         _userStoryFactory = userStoryFactory;
-        _publisher = publisher;
-    }
-
-    public async Task<Result<CreatedUserStoryDTO>> Create(CreateUserStoryDTO userStoryDTO)
-    {
-        IUserStory newUserStory;
-        try
-        {
-            newUserStory = _userStoryFactory.Create(userStoryDTO.Description, userStoryDTO.Priority, userStoryDTO.Risk);
-            newUserStory = await _userStoryRepository.AddAsync(newUserStory);
-
-            var result = new CreatedUserStoryDTO(newUserStory.Id, newUserStory.Description, newUserStory.Priority, newUserStory.Risk);
-
-            await _publisher.PublishUserStoryCreatedAsync(newUserStory);
-            return Result<CreatedUserStoryDTO>.Success(result);
-        }
-        catch (ArgumentException ex)
-        {
-            return Result<CreatedUserStoryDTO>.Failure(Error.InternalServerError(ex.Message));
-        }
     }
 
     public async Task AddConsumed(CreateUserStoryFromMessageDTO userStoryDTO)
@@ -59,5 +39,20 @@ public class UserStoryService : IUserStoryService
 
         var newUserStory = _userStoryFactory.Create(userStoryVisitor);
         await _userStoryRepository.AddAsync(newUserStory);
+    }
+
+    public async Task<Result<IEnumerable<UserStoryDTO>>> GetAll()
+    {
+        try
+        {
+            var userStories = await _userStoryRepository.GetAllAsync();
+            var result = userStories.Select(us => new UserStoryDTO(us.Id, us.Description, us.Priority, us.Risk));
+
+            return Result<IEnumerable<UserStoryDTO>>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<IEnumerable<UserStoryDTO>>.Failure(Error.InternalServerError(ex.Message));
+        }
     }
 }

@@ -47,6 +47,24 @@ public class SprintService : ISprintService
         }
     }
 
+    public async Task<Result<SprintDTO>> GetById(Guid id)
+    {
+        try
+        {
+            var sprint = await _sprintRepository.GetByIdAsync(id);
+            if (sprint == null)
+                return Result<SprintDTO>.Failure(Error.NotFound($"Sprint with ID {id} not found."));
+
+            var result = new SprintDTO(sprint.Id, sprint.ProjectId, sprint.Period, sprint.TotalEffortHours);
+
+            return Result<SprintDTO>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<SprintDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
     public async Task AddConsumed(CreateSprintFromMessageDTO sprintDTO)
     {
         var sprint = await _sprintRepository.GetByIdAsync(sprintDTO.Id);

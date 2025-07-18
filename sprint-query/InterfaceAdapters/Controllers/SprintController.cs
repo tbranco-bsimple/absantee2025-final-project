@@ -23,7 +23,15 @@ public class SprintController : ControllerBase
         return sprintsDTO.ToActionResult();
     }
 
-    [HttpGet("{projectId}")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SprintDTO>> GetAll(Guid id)
+    {
+        var sprintDTO = await _sprintService.GetById(id);
+
+        return sprintDTO.ToActionResult();
+    }
+
+    [HttpGet("project/{projectId}")]
     public async Task<ActionResult<IEnumerable<SprintDTO>>> GetAllByProjectId(Guid projectId)
     {
         var sprintsDTO = await _sprintService.GetAllByProjectId(projectId);

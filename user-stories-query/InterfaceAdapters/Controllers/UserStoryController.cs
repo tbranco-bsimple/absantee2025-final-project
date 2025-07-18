@@ -22,4 +22,12 @@ public class UserStoryController : ControllerBase
 
         return userStoriesDTO.ToActionResult();
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserStoryDTO>> GetById(Guid id)
+    {
+        var userStoryDTO = await _userStoryService.GetById(id);
+
+        return userStoryDTO.ToActionResult();
+    }
 }

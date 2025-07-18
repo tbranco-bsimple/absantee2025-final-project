@@ -55,4 +55,22 @@ public class UserStoryService : IUserStoryService
             return Result<IEnumerable<UserStoryDTO>>.Failure(Error.InternalServerError(ex.Message));
         }
     }
+
+    public async Task<Result<UserStoryDTO>> GetById(Guid id)
+    {
+        try
+        {
+            var us = await _userStoryRepository.GetByIdAsync(id);
+            if (us == null)
+                return Result<UserStoryDTO>.Failure(Error.NotFound($"User Story with ID {id} not found."));
+
+            var result = new UserStoryDTO(us.Id, us.Description, us.Priority, us.Risk);
+
+            return Result<UserStoryDTO>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<UserStoryDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
 }

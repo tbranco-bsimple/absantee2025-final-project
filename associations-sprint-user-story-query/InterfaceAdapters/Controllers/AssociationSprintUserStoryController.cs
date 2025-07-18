@@ -23,6 +23,14 @@ public class AssociationSprintUserStoryController : ControllerBase
         return associationsSprintUserStoryDTO.ToActionResult();
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AssociationSprintUserStoryDTO>> GetById(Guid id)
+    {
+        var associationSprintUserStoryDTO = await _associationSprintUserStoryService.GetById(id);
+
+        return associationSprintUserStoryDTO.ToActionResult();
+    }
+
     [HttpGet("sprint/{sprintId}")]
     public async Task<ActionResult<IEnumerable<UserStoryDTO>>> GetAllUserStoriesOfSprint(Guid sprintId)
     {

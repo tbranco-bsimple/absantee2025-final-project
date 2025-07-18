@@ -32,6 +32,24 @@ public class AssociationSprintUserStoryService : IAssociationSprintUserStoryServ
         }
     }
 
+    public async Task<Result<AssociationSprintUserStoryDTO>> GetById(Guid id)
+    {
+        try
+        {
+            var association = await _associationSprintUserStoryRepository.GetByIdAsync(id);
+            if (association == null)
+                return Result<AssociationSprintUserStoryDTO>.Failure(Error.NotFound($"Association with ID {id} not found."));
+
+            var result = new AssociationSprintUserStoryDTO(association.Id, association.SprintId, association.UserStoryId, association.CollaboratorId, association.EffortHours, association.CompletionPercentage);
+
+            return Result<AssociationSprintUserStoryDTO>.Success(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return Result<AssociationSprintUserStoryDTO>.Failure(Error.InternalServerError(ex.Message));
+        }
+    }
+
     public async Task<Result<IEnumerable<UserStoryDTO>>> GetAllUserStoriesOfSprint(Guid sprintId)
     {
         try
@@ -52,6 +70,9 @@ public class AssociationSprintUserStoryService : IAssociationSprintUserStoryServ
         try
         {
             var associationsSprintUserStory = await _associationSprintUserStoryRepository.GetBySprintUserStoryAsync(sprintId, userStoryId);
+            if (associationsSprintUserStory == null)
+                return Result<UserStoryDTO>.Failure(Error.NotFound($"User Story with ID: {userStoryId} not found in Sprint with ID: {sprintId}."));
+
             var result = new UserStoryDTO(associationsSprintUserStory.Id);
 
             return Result<UserStoryDTO>.Success(result);
